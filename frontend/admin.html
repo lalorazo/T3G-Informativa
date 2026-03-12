@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T3G - Panel Administrador</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #020617;
+            --bg-section: #0f172a;
+            --bg-card: #1e293b;
+            --accent-primary: #08b6d4;
+            --accent-secondary: #3b82f6;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        nav {
+            background-color: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .logout-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+        
+        .dashboard {
+            padding-top: 100px;
+            padding-bottom: 2rem;
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 1rem;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+            border-color: var(--accent-primary);
+        }
+        
+        .tab:hover {
+            border-color: var(--accent-primary);
+        }
+        
+        .table-container {
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .badge.admin {
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+        
+        .badge.cliente {
+            background-color: var(--bg-section);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .badge.pendiente {
+            background-color: var(--warning);
+            color: var(--bg-primary);
+        }
+        
+        .badge.enviado {
+            background-color: var(--success);
+            color: var(--bg-primary);
+        }
+        
+        .btn-small {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .btn-small:hover {
+            opacity: 0.9;
+        }
+        
+        h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .error-message {
+            color: var(--danger);
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .refresh-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        
+        .refresh-btn:hover {
+            border-color: var(--accent-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="logo-text">T3G Admin</div>
+            <div class="user-info">
+                <span id="adminNombre">Cargando...</span>
+                <button class="refresh-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Salir
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container dashboard">
+        <div class="welcome-card">
+            <h2>Panel de Administración</h2>
+            <p>Gestiona clientes, kits y solicitudes de demo desde aquí.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-value" id="totalClientes">0</div>
+                <div class="stat-label">Total Clientes</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-box"></i>
+                <div class="stat-value" id="totalKits">0</div>
+                <div class="stat-label">Kits</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-video"></i>
+                <div class="stat-value" id="totalCamaras">0</div>
+                <div class="stat-label">Cámaras</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-envelope"></i>
+                <div class="stat-value" id="totalDemos">0</div>
+                <div class="stat-label">Solicitudes</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('clientes')">Clientes</div>
+            <div class="tab" onclick="showTab('kits')">Kits</div>
+            <div class="tab" onclick="showTab('demos')">Solicitudes Demo</div>
+        </div>
+
+        <!-- Tabla de Clientes -->
+        <div id="tab-clientes" class="table-container">
+            <h3><i class="fas fa-users"></i> Lista de Clientes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Kit</th>
+                        <th>Rol</th>
+                    </tr>
+                </thead>
+                <tbody id="clientesTableBody">
+                    <tr><td colspan="6" class="loading">Cargando clientes...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tabla de Kits -->
+        <div id="tab-kits" class="table-container" style="display: none;">
+            <h3><i class="fas fa-box"></i> Kits de Seguridad</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Precio</th>
+                        <th>Cámaras</th>
+                        <th>Gas</th>
+                        <th>Movimiento</th>
+                        <th>Calor</th>
+                    </tr>
+                </thead>
+                <tbody id="kitsTableBody">
+                    <tr><td colspan="7" class="loading">Cargando kits...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tabla de Solicitudes Demo -->
+        <div id="tab-demos" class="table-container" style="display: none;">
+            <h3><i class="fas fa-envelope"></i> Solicitudes de Demo</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Kit Interés</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="demosTableBody">
+                    <tr><td colspan="6" class="loading">Cargando solicitudes...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Configuración
+        const API_URL = 'http://localhost:5000/api';
+        
+        // Verificar sesión
+        const token = localStorage.getItem('t3g_token');
+        const adminData = localStorage.getItem('t3g_cliente');
+        
+        if (!token || !adminData) {
+            window.location.href = '/';
+        }
+        
+        const admin = JSON.parse(adminData);
+        
+        if (admin.rol !== 'admin') {
+            window.location.href = '/cliente.html';
+        }
+        
+        document.getElementById('adminNombre').textContent = admin.nombre;
+        
+        // Función para peticiones autenticadas
+        async function apiRequest(endpoint, method = 'GET') {
+            try {
+                const response = await fetch(`${API_URL}${endpoint}`, {
+                    method,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.status === 401) {
+                    // Token expirado
+                    localStorage.removeItem('t3g_token');
+                    localStorage.removeItem('t3g_cliente');
+                    window.location.href = '/';
+                    return null;
+                }
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Error en la petición');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+        
+        // Cargar todos los datos
+        async function loadData() {
+            try {
+                // Cargar estadísticas
+                const stats = await apiRequest('/admin/stats');
+                if (stats) {
+                    document.getElementById('totalClientes').textContent = stats.total_clientes || 0;
+                    document.getElementById('totalKits').textContent = stats.total_kits || 0;
+                    document.getElementById('totalCamaras').textContent = stats.total_camaras || 0;
+                    document.getElementById('totalDemos').textContent = stats.solicitudes_pendientes || 0;
+                }
+                
+                // Cargar listas
+                await loadClientes();
+                await loadKits();
+                await loadDemos();
+                
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+            }
+        }
+        
+        async function loadClientes() {
+            try {
+                const clientes = await apiRequest('/admin/clientes');
+                
+                const tbody = document.getElementById('clientesTableBody');
+                
+                if (!clientes || clientes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="loading">No hay clientes registrados</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = clientes.map(c => `
+                    <tr>
+                        <td>${c.codigo_cliente || 'N/A'}</td>
+                        <td>${c.nombre || 'N/A'}</td>
+                        <td>${c.email || 'N/A'}</td>
+                        <td>${c.telefono || 'N/A'}</td>
+                        <td>${c.kit_adquirido || 'Ninguno'}</td>
+                        <td><span class="badge ${c.rol || 'cliente'}">${c.rol || 'cliente'}</span></td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error cargando clientes:', error);
+                document.getElementById('clientesTableBody').innerHTML = 
+                    '<tr><td colspan="6" class="error-message">Error al cargar clientes</td></tr>';
+            }
+        }
+        
+        async function loadKits() {
+            try {
+                const kits = await apiRequest('/admin/kits');
+                
+                const tbody = document.getElementById('kitsTableBody');
+                
+                if (!kits || kits.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="loading">No hay kits disponibles</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = kits.map(k => `
+                    <tr>
+                        <td>${k.nombre || 'N/A'}</td>
+                        <td>${k.tipo || 'N/A'}</td>
+                        <td>$${k.precio?.toFixed(2) || '0.00'} MXN</td>
+                        <td>${k.sensores?.camaras || 0}</td>
+                        <td>${k.sensores?.gas || 0}</td>
+                        <td>${k.sensores?.movimiento || 0}</td>
+                        <td>${k.sensores?.calor || 0}</td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error cargando kits:', error);
+                document.getElementById('kitsTableBody').innerHTML = 
+                    '<tr><td colspan="7" class="error-message">Error al cargar kits</td></tr>';
+            }
+        }
+        
+        async function loadDemos() {
+            try {
+                const demos = await apiRequest('/admin/demos');
+                
+                const tbody = document.getElementById('demosTableBody');
+                
+                if (!demos || demos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="loading">No hay solicitudes de demo</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = demos.map(d => `
+                    <tr>
+                        <td>${new Date(d.fecha_solicitud).toLocaleDateString() || 'N/A'}</td>
+                        <td>${d.nombre || 'N/A'}</td>
+                        <td>${d.email || 'N/A'}</td>
+                        <td>${d.telefono || 'N/A'}</td>
+                        <td>${d.kit_interes || 'No especificado'}</td>
+                        <td><span class="badge ${d.estado || 'pendiente'}">${d.estado || 'pendiente'}</span></td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error cargando demos:', error);
+                document.getElementById('demosTableBody').innerHTML = 
+                    '<tr><td colspan="6" class="error-message">Error al cargar solicitudes</td></tr>';
+            }
+        }
+        
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('tab-clientes').style.display = 'none';
+            document.getElementById('tab-kits').style.display = 'none';
+            document.getElementById('tab-demos').style.display = 'none';
+            
+            document.getElementById(`tab-${tab}`).style.display = 'block';
+        }
+        
+        function refreshData() {
+            loadData();
+        }
+        
+        function logout() {
+            localStorage.removeItem('t3g_token');
+            localStorage.removeItem('t3g_cliente');
+            window.location.href = '/';
+        }
+        
+        // Cargar datos al iniciar
+        loadData();
+    </script>
+</body>
+</html>

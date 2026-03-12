@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T3G - Mi Sistema</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #020617;
+            --bg-section: #0f172a;
+            --bg-card: #1e293b;
+            --accent-primary: #08b6d4;
+            --accent-secondary: #3b82f6;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+        
+        nav {
+            background-color: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+        
+        .dashboard {
+            padding-top: 100px;
+            padding-bottom: 2rem;
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 1rem;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .cameras-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .camera-card {
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .camera-preview {
+            height: 200px;
+            background-color: #0a0e1a;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .camera-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1a3a5f, #0f172a);
+            animation: pulse 2s infinite;
+        }
+        
+        .camera-info {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .sensors-list {
+            margin-top: 1.5rem;
+        }
+        
+        .sensor-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: var(--bg-card);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .sensor-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #10b981;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+        
+        .error-message {
+            color: var(--danger);
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+        
+        @keyframes pulse {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .cameras-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <div class="logo-text">T3G</div>
+            <div class="user-info">
+                <span id="clienteNombre">Cargando...</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Salir
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container dashboard">
+        <div id="errorContainer" class="error-message" style="display: none;"></div>
+        
+        <div class="welcome-card">
+            <h2>Bienvenido, <span id="clienteNombre2">Cliente</span></h2>
+            <p>Tu sistema de seguridad está activo y monitoreando tu propiedad 24/7.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-video"></i>
+                <div class="stat-value" id="statsCamaras">0</div>
+                <div class="stat-label">Cámaras activas</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-fire"></i>
+                <div class="stat-value" id="statsGas">0</div>
+                <div class="stat-label">Sensores de gas</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-running"></i>
+                <div class="stat-value" id="statsMovimiento">0</div>
+                <div class="stat-label">Sensores movimiento</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-temperature-high"></i>
+                <div class="stat-value" id="statsCalor">0</div>
+                <div class="stat-label">Sensores de calor</div>
+            </div>
+        </div>
+
+        <h2><i class="fas fa-video"></i> Cámaras en vivo</h2>
+        <div class="cameras-grid" id="camerasGrid">
+            <div class="loading">Cargando cámaras...</div>
+        </div>
+
+        <h2 style="margin-top: 2rem;"><i class="fas fa-microchip"></i> Estado de sensores</h2>
+        <div class="sensors-list" id="sensorsList">
+            <div class="loading">Cargando sensores...</div>
+        </div>
+    </div>
+
+    <script>
+        // Función segura para acceder a localStorage
+        function getLocalStorage(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (e) {
+                console.error('Error accediendo a localStorage:', e);
+                return null;
+            }
+        }
+
+        function setLocalStorage(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (e) {
+                console.error('Error guardando en localStorage:', e);
+                return false;
+            }
+        }
+
+        // Verificar sesión al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 Página de cliente cargada');
+            
+            // Verificar si localStorage está disponible
+            if (typeof localStorage === 'undefined') {
+                document.getElementById('errorContainer').style.display = 'block';
+                document.getElementById('errorContainer').textContent = 'Error: localStorage no está disponible';
+                return;
+            }
+            
+            const token = getLocalStorage('t3g_token');
+            const clienteData = getLocalStorage('t3g_cliente');
+            
+            console.log('🔍 Token:', token ? '✅ Existe' : '❌ No existe');
+            console.log('🔍 Cliente data:', clienteData ? '✅ Existe' : '❌ No existe');
+            
+            if (!token || !clienteData) {
+                console.log('❌ No hay sesión, redirigiendo a login...');
+                window.location.href = '/';
+                return;
+            }
+            
+            try {
+                const cliente = JSON.parse(clienteData);
+                console.log('✅ Cliente parseado:', cliente);
+                
+                // Mostrar nombre del cliente
+                document.getElementById('clienteNombre').textContent = cliente.nombre || 'Cliente';
+                document.getElementById('clienteNombre2').textContent = cliente.nombre || 'Cliente';
+                
+                // Verificar si tiene sensores
+                const sensores = cliente.sensores_asignados || [];
+                console.log('📊 Sensores encontrados:', sensores.length);
+                
+                if (sensores.length > 0) {
+                    mostrarSensores(sensores);
+                } else {
+                    // Si no tiene sensores, usar datos de ejemplo según el kit
+                    console.log('⚠️ No hay sensores, usando datos de ejemplo para kit:', cliente.kit_adquirido);
+                    const sensoresEjemplo = obtenerSensoresPorKit(cliente.kit_adquirido);
+                    mostrarSensores(sensoresEjemplo);
+                }
+                
+            } catch (error) {
+                console.error('❌ Error procesando datos:', error);
+                document.getElementById('errorContainer').style.display = 'block';
+                document.getElementById('errorContainer').textContent = 'Error al cargar los datos: ' + error.message;
+            }
+        });
+
+        function obtenerSensoresPorKit(kit) {
+            const sensores = {
+                'profesional': [
+                    {tipo: 'camara', identificador: 'CAM-001', ubicacion: 'Entrada'},
+                    {tipo: 'camara', identificador: 'CAM-002', ubicacion: 'Sala'},
+                    {tipo: 'camara', identificador: 'CAM-003', ubicacion: 'Cocina'},
+                    {tipo: 'camara', identificador: 'CAM-004', ubicacion: 'Patio'},
+                    {tipo: 'gas', identificador: 'GAS-001', ubicacion: 'Cocina'},
+                    {tipo: 'gas', identificador: 'GAS-002', ubicacion: 'Calentador'},
+                    {tipo: 'movimiento', identificador: 'MOV-001', ubicacion: 'Pasillo'},
+                    {tipo: 'movimiento', identificador: 'MOV-002', ubicacion: 'Entrada'},
+                    {tipo: 'calor', identificador: 'CAL-001', ubicacion: 'Cocina'},
+                    {tipo: 'calor', identificador: 'CAL-002', ubicacion: 'Calentador'}
+                ],
+                'residencial': [
+                    {tipo: 'camara', identificador: 'CAM-005', ubicacion: 'Entrada'},
+                    {tipo: 'camara', identificador: 'CAM-006', ubicacion: 'Sala'},
+                    {tipo: 'gas', identificador: 'GAS-003', ubicacion: 'Cocina'},
+                    {tipo: 'movimiento', identificador: 'MOV-003', ubicacion: 'Pasillo'},
+                    {tipo: 'calor', identificador: 'CAL-003', ubicacion: 'Cocina'}
+                ],
+                'empresarial': [
+                    {tipo: 'camara', identificador: 'CAM-007', ubicacion: 'Entrada'},
+                    {tipo: 'camara', identificador: 'CAM-008', ubicacion: 'Recepción'},
+                    {tipo: 'camara', identificador: 'CAM-009', ubicacion: 'Oficina 1'},
+                    {tipo: 'camara', identificador: 'CAM-010', ubicacion: 'Oficina 2'},
+                    {tipo: 'gas', identificador: 'GAS-004', ubicacion: 'Cocina'},
+                    {tipo: 'movimiento', identificador: 'MOV-004', ubicacion: 'Pasillo'},
+                    {tipo: 'calor', identificador: 'CAL-004', ubicacion: 'Cocina'}
+                ]
+            };
+            
+            return sensores[kit] || sensores['residencial'];
+        }
+
+        function mostrarSensores(sensores) {
+            console.log('📊 Mostrando sensores:', sensores);
+            
+            if (!sensores || sensores.length === 0) {
+                document.getElementById('camerasGrid').innerHTML = '<p style="color: var(--text-muted);">No hay cámaras configuradas</p>';
+                document.getElementById('sensorsList').innerHTML = '<p style="color: var(--text-muted);">No hay sensores configurados</p>';
+                return;
+            }
+            
+            // Calcular estadísticas
+            const stats = {
+                camaras: sensores.filter(s => s.tipo === 'camara').length,
+                gas: sensores.filter(s => s.tipo === 'gas').length,
+                movimiento: sensores.filter(s => s.tipo === 'movimiento').length,
+                calor: sensores.filter(s => s.tipo === 'calor').length
+            };
+            
+            console.log('📈 Estadísticas:', stats);
+            
+            // Actualizar estadísticas
+            document.getElementById('statsCamaras').textContent = stats.camaras;
+            document.getElementById('statsGas').textContent = stats.gas;
+            document.getElementById('statsMovimiento').textContent = stats.movimiento;
+            document.getElementById('statsCalor').textContent = stats.calor;
+            
+            // Mostrar cámaras
+            const camaras = sensores.filter(s => s.tipo === 'camara');
+            const camerasGrid = document.getElementById('camerasGrid');
+            
+            if (camaras.length > 0) {
+                camerasGrid.innerHTML = camaras.map(cam => `
+                    <div class="camera-card">
+                        <div class="camera-preview"></div>
+                        <div class="camera-info">
+                            <h4>${cam.ubicacion || 'Sin ubicación'}</h4>
+                            <p style="color: var(--text-muted);">ID: ${cam.identificador || 'N/A'}</p>
+                            <p style="color: #10b981;"><i class="fas fa-circle"></i> En vivo</p>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                camerasGrid.innerHTML = '<p style="color: var(--text-muted);">No hay cámaras configuradas</p>';
+            }
+            
+            // Mostrar otros sensores
+            const otrosSensores = sensores.filter(s => s.tipo !== 'camara');
+            const sensorsList = document.getElementById('sensorsList');
+            
+            if (otrosSensores.length > 0) {
+                sensorsList.innerHTML = otrosSensores.map(sensor => {
+                    let icono = 'fa-microchip';
+                    if (sensor.tipo === 'gas') icono = 'fa-fire';
+                    else if (sensor.tipo === 'movimiento') icono = 'fa-running';
+                    else if (sensor.tipo === 'calor') icono = 'fa-temperature-high';
+                    
+                    return `
+                        <div class="sensor-item">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <i class="fas ${icono}" style="color: var(--accent-primary);"></i>
+                                <div>
+                                    <strong>${sensor.ubicacion || 'Sin ubicación'}</strong>
+                                    <p style="color: var(--text-muted);">${sensor.tipo || 'Sensor'} - ${sensor.identificador || 'N/A'}</p>
+                                </div>
+                            </div>
+                            <div class="sensor-status"></div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                sensorsList.innerHTML = '<p style="color: var(--text-muted);">No hay sensores configurados</p>';
+            }
+        }
+
+        function logout() {
+            try {
+                localStorage.removeItem('t3g_token');
+                localStorage.removeItem('t3g_cliente');
+                console.log('✅ Sesión cerrada');
+            } catch (e) {
+                console.error('Error al cerrar sesión:', e);
+            }
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

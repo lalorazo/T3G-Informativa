@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T3G - Tecnología de Triple Guardia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Barra de Navegación -->
+    <nav>
+        <div class="container nav-container">
+            <a href="#inicio" class="logo-container">
+                <img src="images/LogoT3G.png" alt="T3G Logo" class="logo-image" onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';">
+                <div id="logo-placeholder" class="logo-placeholder" style="display: none;">T3G</div>
+                <div class="logo-text">T3G</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#inicio" class="nav-link">Inicio</a>
+                <a href="#caracteristicas" class="nav-link">Características</a>
+                <a href="#tecnologias" class="nav-link">Tecnologías</a>
+                <a href="#kits" class="nav-link">Kits</a>
+                <a href="#monitoreo" class="nav-link">Monitoreo</a>
+                <a href="#demo" class="nav-link">Demo</a>
+            </div>
+            
+            <div class="nav-cta">
+                <button onclick="openLoginModal()" class="btn btn-primary">
+                    <i class="fas fa-lock"></i> Clientes
+                </button>
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Modal de Login -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLoginModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>Acceso Clientes</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Código de Cliente" id="codigo" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Correo electrónico" id="email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder="Contraseña" id="password" required>
+                </div>
+                <div id="loginError" class="error-message"></div>
+                <button type="submit" class="btn btn-primary btn-wide">
+                    <i class="fas fa-sign-in-alt"></i> Acceder al Sistema
+                </button>
+            </form>
+            <div class="login-info">
+                <i class="fas fa-info-circle"></i>
+                <p>El acceso es exclusivo para clientes con kit adquirido. ¿Eres cliente nuevo? Contáctanos para activar tu cuenta.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección Héroe -->
+    <section id="inicio" class="hero section">
+        <div class="container">
+            <h1>Tecnología de Triple <br><span class="gradient-text">Guardia</span></h1>
+            <p class="hero-subtitle">Protegemos tu hogar o negocio con tecnología de última generación, inteligencia artificial avanzada y monitoreo 24/7. La seguridad que mereces.</p>
+            <div class="hero-buttons">
+                <a href="#kits" class="btn btn-primary">Ver Kits</a>
+                <a href="#demo" class="btn btn-secondary">Solicitar Demo</a>
+            </div>
+            <div class="hero-features">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-text">24/7 Monitoreo</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="feature-text">100% Seguro</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="feature-text">IA Inteligencia Artificial</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Características -->
+    <section id="caracteristicas" class="section section-alt">
+        <div class="container">
+            <h2>¿Por qué T3G?</h2>
+            <div class="features-grid" id="featuresGrid">
+                <!-- Se carga dinámicamente con JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Tecnologías -->
+    <section id="tecnologias" class="section">
+        <div class="container">
+            <h2>Construido con Tecnología de Punta</h2>
+            <div class="tech-grid" id="techGrid">
+                <!-- Se carga dinámicamente con JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Kits -->
+    <section id="kits" class="section section-alt">
+        <div class="container">
+            <h2>Kits de Seguridad</h2>
+            <div class="kits-grid" id="kitsGrid">
+                <!-- Se carga dinámicamente desde MongoDB -->
+                <div class="loading">Cargando kits...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Monitoreo -->
+    <section id="monitoreo" class="section">
+        <div class="container">
+            <h2>Monitoreo en Tiempo Real</h2>
+            <div class="monitoring-dashboard">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title">Dashboard de Seguridad - T3G Control Center</div>
+                        <div class="dashboard-status">
+                            <i class="fas fa-circle"></i>
+                            <span>Sistema Activo</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-content">
+                        <div class="main-feed">
+                            <div class="feed-label">Monitoreo Global de Amenazas</div>
+                            <div class="feed-placeholder"></div>
+                        </div>
+                        <div class="secondary-feeds">
+                            <div class="secondary-feed">
+                                <div class="feed-label">Actividad de Red</div>
+                            </div>
+                            <div class="secondary-feed">
+                                <div class="feed-label">Análisis de Logs</div>
+                            </div>
+                            <div class="secondary-feed">
+                                <div class="feed-label">Alertas del Sistema</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Demo -->
+    <section id="demo" class="section section-alt">
+        <div class="container">
+            <h2>Solicita una Demo Interactiva</h2>
+            <div class="demo-container">
+                <form id="demoForm">
+                    <div class="form-group">
+                        <label for="demoName" class="form-label">Nombre Completo</label>
+                        <input type="text" id="demoName" class="form-input" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="demoEmail" class="form-label">Correo Electrónico</label>
+                        <input type="email" id="demoEmail" class="form-input" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="demoPhone" class="form-label">Teléfono</label>
+                        <input type="tel" id="demoPhone" class="form-input" placeholder="55 1234 5678" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="demoCompany" class="form-label">Empresa (opcional)</label>
+                        <input type="text" id="demoCompany" class="form-input" placeholder="Nombre de tu empresa">
+                    </div>
+                    <div class="form-group">
+                        <label for="demoKit" class="form-label">Kit de interés</label>
+                        <select id="demoKit" class="form-input">
+                            <option value="">Selecciona un kit</option>
+                            <option value="residencial">Kit Residencial</option>
+                            <option value="profesional">Kit Profesional</option>
+                            <option value="empresarial">Kit Empresarial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="demoMessage" class="form-label">Mensaje</label>
+                        <textarea id="demoMessage" class="form-input" placeholder="Cuéntanos qué te gustaría ver en la demo..." required></textarea>
+                    </div>
+                    <div id="demoMessage" class="success-message"></div>
+                    <button type="submit" class="btn btn-primary btn-wide">
+                        <i class="fas fa-paper-plane"></i> Solicitar Demo
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Carrito de Compras -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Tu Carrito</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p style="text-align: center; color: var(--text-muted);">Tu carrito está vacío</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0 MXN</span>
+            </div>
+            <button class="btn btn-success btn-wide" onclick="checkout()">
+                <i class="fas fa-whatsapp"></i> Solicitar por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+    <!-- Notificación -->
+    <div class="notification" id="notification">
+        Producto agregado al carrito
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="copyright">© 2026 T3G Seguridad Tecnológica. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
